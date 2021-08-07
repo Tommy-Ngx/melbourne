@@ -173,6 +173,11 @@ def CLAHE(rgb):
     return cv2.cvtColor(lab, cv2.COLOR_LAB2RGB)
 
 
+def CLAHE2(img):
+    dataxxx = np.array(cv2.cvtColor(cv2.imread(img), cv2.COLOR_BGR2RGB))
+    clahe = CLAHE(dataxxx)
+    return clahe
+
 def show_anh_tienxuly(link):
     PATH = link#'/content/tommy/15.07.1112'
     data = np.array([cv2.cvtColor(cv2.imread(p), cv2.COLOR_BGR2RGB) for p in glob(f'{PATH}/*')])
@@ -226,24 +231,6 @@ def preVert(image_path, output_home):
 
     output_dir = output_home # os.path.join(output_home, basename)
     cv2.imwrite(output_home, clahe)
-
-
-def vert_yolo_1000(link):
-  %cd /content/darknet/
-  my_url = 'https://image.shutterstock.com/shutterstock/photos/37066597/display_1500/stock-photo-x-ray-photo-of-human-knee-caps-37066597.jpg'
-  if link != '':
-    my_url = link  
-  #return "default" if x is None else x
-  #response = requests.get(my_url, stream=True)
-  !cp $link /content/darknet/my_image2.png
-  preVert("/content/darknet/my_image2.png","/content/darknet/my_image1.png")
-  #with open('my_image1.png', 'wb') as file:
-  #    shutil.copyfileobj(response.raw, file)
-  #del response
-  !./darknet detector test data/obj_vert.data cfg/yolov4-custom_vert.cfg /content/tommy/vert1000.weights /content/darknet/my_image1.png -thresh 0.3 -ext_output -dont_show > results.txt
-  ketthuc()
-  imShow('predictions.jpg')
-
 
 
 
