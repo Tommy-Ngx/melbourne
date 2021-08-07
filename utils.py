@@ -34,6 +34,10 @@ from PIL import Image
 from sklearn.metrics import confusion_matrix, classification_report
 from IPython.core.display import display, HTML
 import random
+import matplotlib.pyplot as plot
+import matplotlib.gridspec as gridspec
+from random import randint
+from sklearn.utils import shuffle
 
 def get_img_array(img_path, size):
     img = tf.keras.preprocessing.image.load_img(img_path, target_size=size)
@@ -78,7 +82,6 @@ def get_classlabel(class_code):
     #labels = {0.:0, 1.:1, 2.:2, 3.:3, 4.:4}
     return labels[class_code]
 
-
 def get_images(directory):
     Images = []
     Labels = []  # 0 for Building , 1 for forest, 2 for glacier, 3 for mountain, 4 for Sea , 5 for Street
@@ -98,7 +101,7 @@ def get_images(directory):
             image = cv2.imread(directory+'/'+labels+r'/'+image_file) #Reading the image (OpenCV)
             #print(directory+'/'+labels+r'/'+image_file)
             #image = cv2.resize(image,(150,150)) #Resize the image, Some images are different sizes. (Resizing is very Important)
-            image = scalarX(image)
+            #image = scalarX(image)
             Images.append(image)
             Labels.append(label)
     return shuffle(Images,Labels)#,random_state=817328462) #Shuffle the dataset you just prepared.
@@ -147,6 +150,18 @@ def plotImages2(link, Name):
     
 
 
+def data2df(link):
+  image_dir = Path(link)
+  # Get filepaths and labels
+  filepaths = list(image_dir.glob(r'**/*.png'))
+  labels = list(map(lambda x: os.path.split(os.path.split(x)[0])[1], filepaths))
+  filepaths = pd.Series(filepaths, name='Filepath').astype(str)
+  labels = pd.Series(labels, name='Label_S')
+  # Concatenate filepaths and labels
+  image_df = pd.concat([filepaths, labels], axis=1)
+  dict1={ '0':'healthy', '1':'doubtful', '2':'minimal', '3':'moderate', '4':'severe'}
+  image_df['Label'] = image_df['Label_S'].map(dict1)
+  return image_df
 
 
 
