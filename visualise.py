@@ -379,3 +379,124 @@ def gradcam2(layer, img_path, model2, save_link):
   superimposed_img.save(save_link)
   return superimposed_img
 
+def gradcam3(layer, img_path, model2, save_link):
+  #last_conv_layer_name = "Conv_1"
+  last_conv_layer_name = layer #"conv_7b"
+  img_size = (224,224)
+  # Remove last layer's softmax
+  model2.layers[-1].activation = None
+
+  #img_array = preprocess_input(get_img_array(img_path, size=img_size))
+  image = tf.keras.preprocessing.image.load_img(img_path)
+  img_array = keras.preprocessing.image.img_to_array(image)
+  img = tf.keras.preprocessing.image.load_img(img_path)
+  img = tf.keras.preprocessing.image.img_to_array(img)
+  img_array = scalarX(img_array)
+  img_array  = np.expand_dims(img_array , axis=0)
+  heatmap = make_gradcam_heatmap(img_array, model2, last_conv_layer_name)
+
+  # Rescale heatmap to a range 0-255
+  heatmap = np.uint8(255 * heatmap)
+
+  # Use jet colormap to colorize heatmap
+  jet = cm.get_cmap("jet")
+
+  # Use RGB values of the colormap
+  jet_colors = jet(np.arange(256))[:, :3]
+  jet_heatmap = jet_colors[heatmap]
+
+  # Create an image with RGB colorized heatmap
+  jet_heatmap = tf.keras.preprocessing.image.array_to_img(jet_heatmap)
+  jet_heatmap = jet_heatmap.resize((img.shape[1], img.shape[0]))
+  jet_heatmap = tf.keras.preprocessing.image.img_to_array(jet_heatmap)
+  alpha=0.4
+  # Superimpose the heatmap on original image
+  superimposed_img = jet_heatmap * alpha + img
+  superimposed_img = tf.keras.preprocessing.image.array_to_img(superimposed_img)
+
+  # Save the superimposed image
+  superimposed_img.save(save_link)
+  return superimposed_img
+
+def viz_softmax_layer(link):
+  fig = figure(figsize=(10, 10), dpi=40)
+  image = cv2.imread(link)
+  image = np.expand_dims(image, axis=0)
+  #print(image.shape)
+  pred_prob = model.predict(image).reshape(5)
+  pred_prob = array2percent(pred_prob)
+  #print(pred_prob)
+  pred_class = get_classlabel(np.argmax((model.predict(pred_image)[0])))
+  #bar([0,1,2,3,4],pred_prob)
+  graph= fig.add_subplot(111);
+  graph.bar([0,1,2,3,4],pred_prob, width=0.5, color=['#17A218', '#5AA217', '#9EA217', '#A26917', '#A23217'])
+  #plt.rc('font', size=22)
+  fig.savefig('layer.png', dpi=40)
+
+def show_process_oa(link,model,cvlayer):
+  image = cv2.imread(link)
+  image = np.expand_dims(image, axis=0)
+  #print(image.shape)
+  pred_prob = model.predict(image).reshape(5)
+  pred_prob = array2percent(pred_prob)
+  #print(pred_prob)
+  pred_class = get_classlabel(np.argmax((model.predict(pred_image)[0])))
+  #bar([0,1,2,3,4],pred_prob)
+  #graph= fig.add_subplot(1,3,1);
+    #plt.rc('font', size=22)
+  fig = plt.figure(figsize=(30, 7))
+
+  fig.add_subplot(1, 3, 1)
+  plt.imshow(cv2.imread(link))
+  plt.axis('off')
+  plt.title("Input Image")
+
+  fig.add_subplot(1, 3, 2)
+  #ax2 = plt.axes()
+  plt.bar([0,1,2,3,4],pred_prob, width=0.5, color=['#17A218', '#5AA217', '#9EA217', '#A26917', '#A23217'])
+  #plt.axis('off')
+  pred_class = get_classlabel(np.argmax((model.predict(pred_image)[0])))
+  plt.title(pred_class)
+
+  campic = gradcam2(cvlayer,link,model,"/content/kk.png")
+  #print(campic.shape)
+  # Adds a subplot at the 2nd position
+  fig.add_subplot(1, 3, 3)
+  plt.imshow(campic,interpolation='nearest')
+  plt.axis('off')
+  plt.title("GradCam")
+
+
+def show_process_oax(link,model,cvlayer):
+  image = cv2.imread(link)
+  image = np.expand_dims(image, axis=0)
+  #print(image.shape)
+  pred_prob = model.predict(image).reshape(5)
+  pred_prob = array2percent(pred_prob)
+  #print(pred_prob)
+  pred_class = get_classlabel(np.argmax((model.predict(pred_image)[0])))
+  #bar([0,1,2,3,4],pred_prob)
+  #graph= fig.add_subplot(1,3,1);
+    #plt.rc('font', size=22)
+  fig = plt.figure(figsize=(30, 7))
+
+  fig.add_subplot(1, 3, 1)
+  plt.imshow(cv2.imread(link))
+  plt.axis('off')
+  plt.title("Input Image")
+
+  fig.add_subplot(1, 3, 2)
+  #ax2 = plt.axes()
+  plt.bar([0,1,2,3,4],pred_prob, width=0.5, color=['#17A218', '#5AA217', '#9EA217', '#A26917', '#A23217'])
+  #plt.axis('off')
+  pred_class = get_classlabel(np.argmax((model.predict(pred_image)[0])))
+  plt.title(pred_class)
+
+  campic = gradcam3(cvlayer,link,model,"/content/kk.png")
+  #print(campic.shape)
+  # Adds a subplot at the 2nd position
+  fig.add_subplot(1, 3, 3)
+  plt.imshow(campic,interpolation='nearest')
+  plt.axis('off')
+  plt.title("GradCam")
+
