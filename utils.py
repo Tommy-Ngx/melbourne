@@ -178,7 +178,7 @@ def balancing_class(link, max):
   filepaths=[]
   labels=[]
   max_files=max # set maximum number of files in a class
-  data_dir=r'/content/tommy/data'
+  data_dir=link #r'/content/tommy/data'
   set_list=['train', 'test', 'val']
   class_totals=[0,0,0,0,0]
   for s in set_list:
@@ -214,6 +214,7 @@ def balancing_class(link, max):
       class_weight[i]=max_samples/class_totals[i]
   print ('Class weight: ',class_weight)
   print(' Total files: ',len(filepaths), '  Total labels', len(labels))
+  return   filepaths, labels
 
 
 
