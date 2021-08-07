@@ -35,7 +35,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 from IPython.core.display import display, HTML
 from IPython.display import display, Markdown
 from glob2 import glob
-
+from matplotlib.pyplot import figure
 
 
 def scaler(img): # normal preprocessing function used originally but poor accuracy on test set

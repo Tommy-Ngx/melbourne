@@ -24,7 +24,9 @@ from pathlib import Path
 import tensorflow as tf
 import matplotlib.cm as cm
 from tensorflow import keras
+from matplotlib.pyplot import figure
 
+from preprocess import *
 from visualise import *
 from utils import *
 
@@ -440,10 +442,7 @@ def show_process_oa(link,model,cvlayer):
   pred_prob = model.predict(image).reshape(5)
   pred_prob = array2percent(pred_prob)
   #print(pred_prob)
-  pred_class = get_classlabel(np.argmax((model.predict(pred_image)[0])))
-  #bar([0,1,2,3,4],pred_prob)
-  #graph= fig.add_subplot(1,3,1);
-    #plt.rc('font', size=22)
+  pred_class = get_classlabel(np.argmax((model.predict(image))))
   fig = plt.figure(figsize=(30, 7))
 
   fig.add_subplot(1, 3, 1)
@@ -455,29 +454,25 @@ def show_process_oa(link,model,cvlayer):
   #ax2 = plt.axes()
   plt.bar([0,1,2,3,4],pred_prob, width=0.5, color=['#17A218', '#5AA217', '#9EA217', '#A26917', '#A23217'])
   #plt.axis('off')
-  pred_class = get_classlabel(np.argmax((model.predict(pred_image)[0])))
   plt.title(pred_class)
 
   campic = gradcam2(cvlayer,link,model,"/content/kk.png")
   #print(campic.shape)
-  # Adds a subplot at the 2nd position
   fig.add_subplot(1, 3, 3)
   plt.imshow(campic,interpolation='nearest')
   plt.axis('off')
   plt.title("GradCam")
 
 
-def show_process_oax(link,model,cvlayer):
+
+def show_process_oa(link,model,cvlayer):
   image = cv2.imread(link)
   image = np.expand_dims(image, axis=0)
   #print(image.shape)
   pred_prob = model.predict(image).reshape(5)
   pred_prob = array2percent(pred_prob)
   #print(pred_prob)
-  pred_class = get_classlabel(np.argmax((model.predict(pred_image)[0])))
-  #bar([0,1,2,3,4],pred_prob)
-  #graph= fig.add_subplot(1,3,1);
-    #plt.rc('font', size=22)
+  pred_class = get_classlabel(np.argmax((model.predict(image))))
   fig = plt.figure(figsize=(30, 7))
 
   fig.add_subplot(1, 3, 1)
@@ -489,14 +484,13 @@ def show_process_oax(link,model,cvlayer):
   #ax2 = plt.axes()
   plt.bar([0,1,2,3,4],pred_prob, width=0.5, color=['#17A218', '#5AA217', '#9EA217', '#A26917', '#A23217'])
   #plt.axis('off')
-  pred_class = get_classlabel(np.argmax((model.predict(pred_image)[0])))
   plt.title(pred_class)
 
   campic = gradcam3(cvlayer,link,model,"/content/kk.png")
   #print(campic.shape)
-  # Adds a subplot at the 2nd position
   fig.add_subplot(1, 3, 3)
   plt.imshow(campic,interpolation='nearest')
   plt.axis('off')
   plt.title("GradCam")
+
 
