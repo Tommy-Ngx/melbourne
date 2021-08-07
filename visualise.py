@@ -435,6 +435,24 @@ def viz_softmax_layer(link,mdel):
   #plt.rc('font', size=22)
   fig.savefig('layer.png', dpi=40)
 
+def viz_softmax_layerx(link,mdel):
+  fig = figure(figsize=(10, 10), dpi=40)
+  image = cv2.imread(link)
+  img1 = np.array(image)
+  img1 = scalarX(img1)
+  image = np.expand_dims(img1, axis=0)
+  #print(image.shape)
+  pred_prob = model.predict(image).reshape(5)
+  pred_prob = array2percent(pred_prob)
+  #print(pred_prob)
+  pred_class = get_classlabel(np.argmax((model.predict(image))))
+  #bar([0,1,2,3,4],pred_prob)
+  graph= fig.add_subplot(111);
+  graph.bar([0,1,2,3,4],pred_prob, width=0.5, color=['#17A218', '#5AA217', '#9EA217', '#A26917', '#A23217'])
+  #plt.rc('font', size=22)
+  fig.savefig('layer.png', dpi=40)
+  
+
 def show_process_oa(link,model,cvlayer):
   image = cv2.imread(link)
   image = np.expand_dims(image, axis=0)
@@ -466,7 +484,7 @@ def show_process_oa(link,model,cvlayer):
 
 def show_process_oax(link,model,cvlayer):
   image = cv2.imread(link)
-  img1 = tf.keras.preprocessing.image.img_to_array(image)
+  img1 =  np.array(image)
   img1 = scalarX(img1)
   image = np.expand_dims(img1, axis=0)
   #print(image.shape)
