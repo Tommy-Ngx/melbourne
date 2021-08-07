@@ -163,6 +163,57 @@ def data2df(link):
   image_df['Label'] = image_df['Label_S'].map(dict1)
   return image_df
 
+def check_data_folder(link):
+  train_dir= link
+  classes=sorted(os.listdir(train_dir))
+  #print(classes)
+  class_count=len(classes)
+  for klass in classes:
+      classpath=os.path.join(train_dir, klass)
+      file_count=len(os.listdir(classpath))
+      print ('Class: ' , klass, '   samples: ', file_count)
+
+def balancing_class(link, max):
+  # Cân bằng các lớp
+  filepaths=[]
+  labels=[]
+  max_files=max # set maximum number of files in a class
+  data_dir=r'/content/tommy/data'
+  set_list=['train', 'test', 'val']
+  class_totals=[0,0,0,0,0]
+  for s in set_list:
+      spath=os.path.join(data_dir,s)
+      classes=sorted(os.listdir(spath)) # list of classes    
+      for i, klass in enumerate(classes):        
+          classpath=os.path.join(spath, klass)
+          filelist=os.listdir(classpath)
+          for f in filelist:
+              fpath=os.path.join(classpath,f)
+              # checks if the file extension is one that can be used with ImageDataGenerator
+              index=fpath.rfind('.')
+              ext=fpath[index+1:].lower()
+              if ext in ['jpg', 'jpeg', 'png']:
+                  # check to see if the image files are valid images
+                  try:
+                      img = Image.open(fpath)
+                      img.verify()
+                      if class_totals[i] < max_files:                                              
+                          class_totals[i]=class_totals[i] + 1
+                          filepaths.append(fpath)
+                          labels.append(klass)                   
+                  except:
+                      print ('file ', fpath, ' is an invalid image file and will not be processed')             
+              else:
+                  print ('file ', fpath, ' with ', ext, '  will not be processed')       
+  # determine the class weight dictionary
+  for i in range(len(class_totals)):
+      print (' Class: ', classes[i],  ' Totals_samples: ', class_totals[i])
+  max_samples=np.max(class_totals)
+  class_weight={}
+  for i in range (len(class_totals)):
+      class_weight[i]=max_samples/class_totals[i]
+  print ('Class weight: ',class_weight)
+  print(' Total files: ',len(filepaths), '  Total labels', len(labels))
 
 
 
