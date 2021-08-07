@@ -420,7 +420,7 @@ def gradcam3(layer, img_path, model2, save_link):
   superimposed_img.save(save_link)
   return superimposed_img
 
-def viz_softmax_layer(link,mdel):
+def viz_softmax_layer(link,model):
   fig = figure(figsize=(10, 10), dpi=40)
   image = cv2.imread(link)
   image = np.expand_dims(image, axis=0)
@@ -435,7 +435,7 @@ def viz_softmax_layer(link,mdel):
   #plt.rc('font', size=22)
   fig.savefig('layer.png', dpi=40)
 
-def viz_softmax_layerx(link,mdel):
+def viz_softmax_layerx(link,model):
   fig = figure(figsize=(10, 10), dpi=40)
   image = cv2.imread(link)
   img1 = np.array(image)
@@ -451,7 +451,7 @@ def viz_softmax_layerx(link,mdel):
   graph.bar([0,1,2,3,4],pred_prob, width=0.5, color=['#17A218', '#5AA217', '#9EA217', '#A26917', '#A23217'])
   #plt.rc('font', size=22)
   fig.savefig('layer.png', dpi=40)
-  
+
 
 def show_process_oa(link,model,cvlayer):
   image = cv2.imread(link)
