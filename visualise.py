@@ -23,6 +23,7 @@ from IPython.core.display import display, HTML
 from pathlib import Path
 import tensorflow as tf
 import matplotlib.cm as cm
+from tensorflow import keras
 
 from visualise import *
 from utils import *
