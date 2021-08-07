@@ -178,6 +178,17 @@ def CLAHE2(img):
     clahe = CLAHE(dataxxx)
     return clahe
 
+def CLAHE3(img):
+  img=np.array(img, dtype='uint8')
+  img=cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)  
+  clahe = cv2.createCLAHE(clipLimit =2.0, tileGridSize=(8,8))
+  img = clahe.apply(img)
+  img=cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+  img=np.array(img, dtype=('float32'))  
+  img=img/127.5-1
+  return img
+  
+
 def show_anh_tienxuly(link):
     PATH = link#'/content/tommy/15.07.1112'
     data = np.array([cv2.cvtColor(cv2.imread(p), cv2.COLOR_BGR2RGB) for p in glob(f'{PATH}/*')])
