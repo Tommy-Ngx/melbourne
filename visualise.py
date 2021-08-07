@@ -466,7 +466,9 @@ def show_process_oa(link,model,cvlayer):
 
 def show_process_oax(link,model,cvlayer):
   image = cv2.imread(link)
-  image = np.expand_dims(image, axis=0)
+  img1 = tf.keras.preprocessing.image.img_to_array(image)
+  img1 = scalarX(img1)
+  image = np.expand_dims(img1, axis=0)
   #print(image.shape)
   pred_prob = model.predict(image).reshape(5)
   pred_prob = array2percent(pred_prob)
