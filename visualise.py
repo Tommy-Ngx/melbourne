@@ -428,7 +428,7 @@ def viz_softmax_layer(link):
   pred_prob = model.predict(image).reshape(5)
   pred_prob = array2percent(pred_prob)
   #print(pred_prob)
-  pred_class = get_classlabel(np.argmax((model.predict(pred_image)[0])))
+  pred_class = get_classlabel(np.argmax((model.predict(image))))
   #bar([0,1,2,3,4],pred_prob)
   graph= fig.add_subplot(111);
   graph.bar([0,1,2,3,4],pred_prob, width=0.5, color=['#17A218', '#5AA217', '#9EA217', '#A26917', '#A23217'])
@@ -464,8 +464,7 @@ def show_process_oa(link,model,cvlayer):
   plt.title("GradCam")
 
 
-
-def show_process_oa(link,model,cvlayer):
+def show_process_oax(link,model,cvlayer):
   image = cv2.imread(link)
   image = np.expand_dims(image, axis=0)
   #print(image.shape)
