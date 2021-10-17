@@ -108,7 +108,7 @@ def print_info( test_gen, preds, print_code, save_dir, subject ):
         new_dict[value]=key             # dictionary {integer of class number: string of class name}
     # store new_dict as a text fine in the save_dir
     classes=list(new_dict.values())     # list of string of class names
-    classes=['minimal', 'healthy', 'moderate', 'doubtful', 'severe']
+    classes=['healthy','minimal', 'moderate', 'doubtful', 'severe']
     print ('*** classes ', classes)
     dict_as_text=str(new_dict)
     dict_name= subject + '-' +str(len(classes)) +'.txt'  
